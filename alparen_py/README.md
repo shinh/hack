@@ -14,3 +14,7 @@ There are also Quines with the same restriction:
 [for Python 2](alparen_quine.py)
 
 [for Python 3](alparen_quine.py3)
+
+These Quines are using some more tricks than ppencode_py mainly to
+reduce the size of code. Two important tricks are creditted to
+@mametter and @phoenixstarhiro.
