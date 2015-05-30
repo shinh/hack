@@ -8,3 +8,9 @@ lowercase alphabets and parenthesis:
 [ppencode_py.html](http://shinh.skr.jp/obf/ppencode_py.html)
 
 [nishiohirokazu's found a way to write Python code only with lower case alphabets, parenthesis, and commas](http://d.hatena.ne.jp/nishiohirokazu/20120906/1346938523).
+
+There are also Quines with the same restriction:
+
+[for Python 2](alparen_quine.py)
+
+[for Python 3](alparen_quine.py3)
