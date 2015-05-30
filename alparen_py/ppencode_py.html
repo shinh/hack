@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<link rev="MADE" href="mailto:shinichiro.hamaji _at_ gmail.com">
+<link rel="INDEX" href=".">
+<link rel="stylesheet" type="text/css" href="/site.css">
+<title>ppencode? for Python</title>
+</head>
+
+<script src="alpha_paren_py2_data.js"></script>
+<script src="alpha_paren_py3_data.js"></script>
+
+<script>
+
+function check(output) {
+  if (output.match(/[^a-z()]/)) {
+    console.error("invalid character(s)");
+  }
+}
+
+function repr(s) {
+  var r = "'";
+  for (var i = 0; i < s.length; i++) {
+    var c = s[i];
+    if (c == "'") {
+      c = "\\'";
+    } else if (c == "\\") {
+      c = "\\\\";
+    } else if (c == "\n") {
+      c = "\\n";
+    }
+    r += c;
+  }
+  r += "'";
+  return r;
+}
+
+function ppencode(input, root_fn, python_ver) {
+  var NUMS = null;
+  var CMPS = null;
+  if (python_ver == 'py3') {
+    if (root_fn == 'print') {
+      root_fn = 'exec';
+      //input = 'print(' + repr(input) + ')';
+      input = "print('''" + input + "''')";
+    }
+
+    NUMS = NUMS3;
+    CMPS = CMPS3;
+  } else {
+    NUMS = NUMS2;
+    CMPS = CMPS2;
+  }
+
+  if (input.length > 255) {
+    return "Input length must be less than 255 bytes"
+  }
+
+  var expr = '';
+  for (var i = 0; i < input.length; i++) {
+    expr = 'if(' + CMPS[i] + ')else(' + NUMS[input.charCodeAt(i)] + ')' + expr;
+  }
+  expr = '()' + expr;
+
+  var ba = 'bytearray(' + expr + 'for(i)in(range(' + NUMS[input.length] + ')))';
+
+  var output = null;
+  if (python_ver == 'py3') {
+    //output = root_fn + '(' + ba + ')';
+    output = root_fn + '(eval(str(' + ba + ')))';
+  } else {
+    if (root_fn == 'print') {
+      output = root_fn + '(' + ba + ')';
+    } else {
+      output = root_fn + '(str(' + ba + '))';
+    }
+  }
+
+  check(output);
+  return output;
+}
+
+function key() {
+  var o = document.getElementById("o");
+  var f = document.getElementById("f");
+  var root_fn = f.input_type.value;
+  var python_ver = f.ext.value;
+  o.value = ppencode(document.getElementById("i").value, root_fn, python_ver);
+}
+
+</script>
+
+<body onload="init()">
+<h1>ppencode? for Python - JavaScript demo</h1>
+
+<p>
+This converts a text or Python script to a Python script which
+uses only lowercase alphabet characters and parenthesis.
+
+<p>
+
+<form id="f" action="http://golf.shinh.org/checker.rb" method="POST" enctype="multipart/form-data" target="_blank">
+<dl>
+<dt>Input
+<input type="radio" name="input_type" value="print" checked onclick="key();">text
+<input type="radio" name="input_type" value="exec" onclick="key();">Python script
+</dt>
+<dd><textarea rows="3" cols="72" onkeyup="key();" id="i"></textarea>
+<dt>Python
+<input type="radio" id="ext" name="ext" value="py" checked onclick="key();">2
+<input type="radio" id="ext" name="ext" value="py3" onclick="key();">3
+program</dt>
+<dd><textarea id="o" name="code" rows="18" cols="72"></textarea>
+<br>
+<input type="submit" value="run it on golf server">
+<input type="hidden" name="input" value="">
+</dl>
+</form>
+
+</body> </html>

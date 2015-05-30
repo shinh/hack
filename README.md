@@ -2,6 +2,10 @@
 
 This repository will be a collection of tricky code.
 
+Unless otherwise specified, programs linked from this repository are
+written by myself. I'm also trying to mention pioneer works for each
+code.
+
 ## Categories
 
 
@@ -18,6 +22,7 @@ Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScrip
 - [Polyglot Symbolic Quine](sym_poly_quine/README.md)
 - [Keyword-only Perl](keyword_pl/README.md)
 - [Ruby only with lower-case alphabets](lower_rb/README.md)
+- [Python only with lowercase alphabets and parenthesis](alparen_py/README.md)
 
 ### Polyglot
 See http://en.wikipedia.org/wiki/Polyglot_(computing)
@@ -32,6 +37,7 @@ See http://en.wikipedia.org/wiki/Quine_%28computing%29
 - [Keyword-only Perl](keyword_pl/README.md)
 - [Ruby only with lower-case alphabets](lower_rb/README.md)
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [Python only with lowercase alphabets and parenthesis](alparen_py/README.md)
 
 
 ## Languages
@@ -81,4 +87,5 @@ See http://en.wikipedia.org/wiki/Quine_%28computing%29
 
 
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [Python only with lowercase alphabets and parenthesis](alparen_py/README.md)
 

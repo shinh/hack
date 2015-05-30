@@ -3,7 +3,7 @@
 Keywords: Restricted Quine Perl
 
 A program which converts any Perl code to a Perl code which only has
-Perl keywords.
+Perl keywords:
 
 [ppencode.html](ppencode.html)
 

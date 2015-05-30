@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<link rev="MADE" href="mailto:shinichiro.hamaji _at_ gmail.com">
+<link rel="INDEX" href=".">
+<link rel="stylesheet" type="text/css" href="/site.css">
+<title>ppencode 2</title>
+</head>
+
+<script>
+
+KW = ['abs','accept','alarm','and','atan','bind','binmode','bless','break','caller','chdir','chmod','chomp','chop','chown','chr','chroot','close','closedir','cmp','connect','continue','cos','crypt','dbmclose','dbmopen','default','defined','delete','die','do','dump','each','else','elseif','elsif','endgrent','endhostent','endnetent','endprotoent','endpwent','endservent','eof','eq','eval','evalbytes','exec','exists','exit','exp','fc','fcntl','fileno','flags','flock','for','foreach','fork','format','formline','ge','getc','getgrent','getgrgid','getgrnam','gethostbyaddr','gethostbyname','gethostent','getlogin','getnetbyaddr','getnetbyname','getnetent','getpeername','getpgrp','getppid','getpriority','getprotobyname','getprotobynumber','getprotoent','getpwent','getpwnam','getpwuid','getservbyname','getservbyport','getservent','getsockname','getsockopt','given','glob','gmtime','goto','grep','gt','hex','if','import','index','int','ioctl','join','keys','kill','last','lc','lcfirst','le','length','link','listen','local','localtime','lock','log','lstat','lt','m','map','mkdir','msgctl','msgget','msgrcv','msgsnd','my','ne','next','no','not','oct','open','opendir','or','ord','order','our','pack','package','pipe','pop','pos','precision','print','printf','prototype','push','q','qq','qr','quotemeta','qw','qx','rand','read','readdir','readline','readlink','readpipe','recv','redo','ref','rename','require','reset','return','reverse','rewinddir','rindex','rmdir','s','say','scalar','seek','seekdir','select','semctl','semget','semop','send','setgrent','sethostent','setnetent','setpgrp','setpriority','setprotoent','setpwent','setservent','setsockopt','shift','shmctl','shmget','shmread','shmwrite','shutdown','sin','size','sleep','socket','socketpair','sort','splice','split','sprintf','sqrt','srand','stat','state','study','sub','substr','symlink','syscall','sysopen','sysread','sysseek','system','syswrite','tell','telldir','tie','tied','time','times','tr','truncate','uc','ucfirst','umask','undef','unless','unlink','unpack','unshift','untie','until','use','utime','values','vec','vector','wait','waitpid','wantarray','warn','when','while','write','x','xor','y'];
+
+function shuffle(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    var j = Math.random() * (arr.length - i) | 0;
+    var tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+  }
+}
+
+function score(s) {
+  var a = s.split(/ /g);
+  var s = 0.0;
+  for (var i = 0; i < a.length; i++) {
+    var l = a[i].length;
+    if (l > 5)
+      s += l - 5.0;
+    if (l < 3)
+      s += 3.0 - l;
+  }
+  return s + Math.random();
+}
+
+function runDP(DP, i, ban, ban2) {
+  for (; i < 256; i++) {
+    shuffle(KW);
+    if (!DP[i])
+      continue;
+    if (DP[i][0].length > 1)
+      DP[i] = DP[i][0];
+    for (var j = 0; j < KW.length; j++) {
+      if (KW[j].indexOf(ban) >= 0 || KW[j].indexOf(ban2) >= 0) {
+        continue;
+      }
+      var n = DP[i] + KW[j] + ' ';
+      var s = score(n);
+      if (!DP[n.length] || s <= DP[n.length][1]) {
+        DP[n.length] = [n, s];
+      }
+    }
+  }
+}
+
+var TBL = new Array(256);
+
+function init() {
+  var DP1 = new Array(256);
+  DP1[1] = ' ';
+  runDP(DP1, 1, 's', 'q');
+  var DP2 = new Array(256);
+  DP2[2] = 'r ';
+  runDP(DP2, 2, 's', 'q');
+
+  TBL[0] = 'chr q q q';
+  for (var i = 1; i < 256; i++) {
+    var c;
+    if (!DP1[i]) {
+      if (!DP2[i]) {
+        console.error("no candidates for " + i);
+      }
+      TBL[i] = 'length q q' + DP2[i] + 'q';
+    } else if (!DP2[i] || Math.random() < 0.5) {
+      TBL[i] = 'length q q' + DP1[i] + 'q';
+    } else {
+      TBL[i] = 'length q q' + DP2[i] + 'q';
+    }
+  }
+}
+
+function ppencode_core(input) {
+  var output = '';
+  var toks = input.match(/\d+|./g);
+  for (var i = 0; i < toks.length; i++) {
+    output += 's qq q xor ';
+  }
+  for (var i = 0; i < toks.length; i++) {
+    var tok = toks[i];
+    if (tok.match(/^\d+$/)) {
+      output += 's s s ' + TBL[tok] + ' semop xor ';
+    } else {
+      var c = tok.charCodeAt(0);
+      output += 's s s chr ' + TBL[c] + ' semop xor ';
+    }
+  }
+  return output + 'eval';
+}
+
+function check(output) {
+  var a = output.split(' ');
+  for (var i = 0; i < a.length; i++) {
+    if (KW.indexOf(a[i]) < 0) {
+      console.error(a[i] + ": not keyword");
+    }
+  }
+}
+
+function ppencode(input) {
+  var code = '$_="";v';
+  for (var i = 0; i < input.length; i++) {
+    if (i > 0)
+      code += '.';
+    code += input.charCodeAt(i);
+  }
+  var output = ppencode_core(code) + ' eval';
+  check(output);
+  return output;
+}
+
+function key() {
+  var o = document.getElementById("o");
+  o.value = ppencode(document.getElementById("i").value);
+}
+
+function quine() {
+  var DP = new Array(256);
+  DP[1] = ' ';
+  runDP(DP, 1, 'q', 'y');
+  var q = 'chr length q q' + DP[113] + 'q';
+  var y = 'chr length q q' + DP[121] + 'q';
+
+  var c = 's qq q xor s y y print qw q s q xor print q q q xor print Q xor print Q xor print q q q xor print Q xor print q q xor s q xor print Y xor print q q q xor print Y xor print xor print Y xor print q q xor q xor print qw q eval q y xor eval';
+  var q = c.replace(/Y/g, y).replace(/Q/g, q);
+  check(q);
+  o.value = q;
+}
+
+</script>
+
+<body onload="init()">
+<h1>ppencode 2 - JavaScript demo</h1>
+
+<p>
+This is an improved version of <a href="http://namazu.org/~takesako/ppencode/demo.html">ppencode</a>. Like ppencode, this generates a Perl script which only uses Perl's (lowercase) keywords. Instead of printing the encoded string, this version evals it. So, you can convert any Perl script to a Perl script which only contains Perl keywords separated by whitespace. Believe it or not, I think this is a significantly more complex task than the original ppencode.
+
+<p>
+This means Perl is Turing complete only with keywords, which means you can write a Quine only with keywords.
+
+<p>
+
+<form action="http://golf.shinh.org/checker.rb" method="POST" enctype="multipart/form-data" target="_blank">
+<dl>
+<dt>Input Perl program</dt>
+<dd><input size="83" onkeyup="key();" id="i">
+<dt>Perl program</dt>
+<dd><textarea id="o" name="code" rows="18" cols="72"></textarea>
+<br>
+<input type="submit" value="run it on golf server">
+<input type="button" value="generate quine" onclick="quine()">
+<input type="hidden" name="ext" value="pl">
+<input type="hidden" name="input" value="">
+</dl>
+</form>
+
+</body> </html>
