@@ -8,7 +8,7 @@ Perl keywords:
 [ppencode.html](http://shinh.skr.jp/obf/ppencode.html)
 
 Note, unlike other languages, Perl defines builtin functions as
-"keywords". "open", "len", "s", and so on are keywords in Perl.
+"keywords". "open", "length", "s", and so on are keywords in Perl.
 
 I think TAKESAKO's
 [ppencode](http://namazu.org/~takesako/ppencode/demo.html)
