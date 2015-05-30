@@ -40,7 +40,7 @@ end
 
 [['CATEGORIES', cats], ['LANGUAGES', langs]].each do |n, m|
   o = ''
-  m.each do |k, mds|
+  m.sort_by{|k, mds|k}.each do |k, mds|
     o += "\n### #{k}\n#{DESCS[k]}\n\n"
     mds.each do |md|
       o += "- [#{md[0]}](#{md[1]})\n"
