@@ -5,7 +5,7 @@ Keywords: Restricted Quine Perl
 A program which converts any Perl code to a Perl code which only has
 Perl keywords:
 
-[ppencode.html](ppencode.html)
+[ppencode.html](http://shinh.skr.jp/obf/ppencode.html)
 
 Note, unlike other languages, Perl defines builtin functions as
 "keywords". "open", "len", "s", and so on are keywords in Perl.
