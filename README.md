@@ -17,34 +17,34 @@ code.
 ### Esolang
 See https://esolangs.org/wiki/Main_Page
 
-- [Sed Lisp](lisp_sed/README.md)
 - [Befunge Lisp](lisp_bef/README.md)
+- [Sed Lisp](lisp_sed/README.md)
 - [cal(1) in Brainfuck](cal_bf/README.md)
 
 ### Polyglot
 See http://en.wikipedia.org/wiki/Polyglot_(computing)
 
-- [Polyglot Symbolic Quine](sym_poly_quine/README.md)
-- [Polyglot GIF](poly_gif/README.md)
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [Polyglot GIF](poly_gif/README.md)
+- [Polyglot Symbolic Quine](sym_poly_quine/README.md)
 
 ### Quine
 See http://en.wikipedia.org/wiki/Quine_%28computing%29
 
-- [Polyglot Symbolic Quine](sym_poly_quine/README.md)
-- [Radiation-hardened Quine](rad_hard_quine/README.md)
-- [Keyword-only Perl](keyword_pl/README.md)
-- [Ruby only with lower-case alphabets](lower_rb/README.md)
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [Keyword-only Perl](keyword_pl/README.md)
+- [Polyglot Symbolic Quine](sym_poly_quine/README.md)
 - [Python only with lowercase alphabets and parenthesis](alparen_py/README.md)
+- [Radiation-hardened Quine](rad_hard_quine/README.md)
+- [Ruby only with lower-case alphabets](lower_rb/README.md)
 
 ### Restricted
 Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScript, and Groovy are known to be turing complete only with symbolic characters (no alphabets, no numerals, no control characters, and no non-ascii characters.).
 
-- [Polyglot Symbolic Quine](sym_poly_quine/README.md)
 - [Keyword-only Perl](keyword_pl/README.md)
-- [Ruby only with lower-case alphabets](lower_rb/README.md)
+- [Polyglot Symbolic Quine](sym_poly_quine/README.md)
 - [Python only with lowercase alphabets and parenthesis](alparen_py/README.md)
+- [Ruby only with lower-case alphabets](lower_rb/README.md)
 
 
 ## Languages
@@ -58,8 +58,8 @@ Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScrip
 ### Brainfuck
 
 
-- [cal(1) in Brainfuck](cal_bf/README.md)
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [cal(1) in Brainfuck](cal_bf/README.md)
 
 ### C
 
@@ -74,11 +74,11 @@ Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScrip
 ### Perl
 
 
-- [Polyglot Symbolic Quine](sym_poly_quine/README.md)
-- [Radiation-hardened Quine](rad_hard_quine/README.md)
+- [5 Languages Polyglot Quine](poly5_quine/README.md)
 - [Keyword-only Perl](keyword_pl/README.md)
 - [Polyglot GIF](poly_gif/README.md)
-- [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [Polyglot Symbolic Quine](sym_poly_quine/README.md)
+- [Radiation-hardened Quine](rad_hard_quine/README.md)
 
 ### Python
 
@@ -89,11 +89,11 @@ Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScrip
 ### Ruby
 
 
+- [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [Polyglot GIF](poly_gif/README.md)
 - [Polyglot Symbolic Quine](sym_poly_quine/README.md)
 - [Radiation-hardened Quine](rad_hard_quine/README.md)
-- [Polyglot GIF](poly_gif/README.md)
 - [Ruby only with lower-case alphabets](lower_rb/README.md)
-- [5 Languages Polyglot Quine](poly5_quine/README.md)
 
 ### Sed
 
