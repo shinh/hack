@@ -32,6 +32,7 @@ See http://en.wikipedia.org/wiki/Polyglot_(computing)
 See http://en.wikipedia.org/wiki/Quine_%28computing%29
 
 - [Polyglot Symbolic Quine](sym_poly_quine/README.md)
+- [Radiation-hardened Quine](rad_hard_quine/README.md)
 - [Keyword-only Perl](keyword_pl/README.md)
 - [Ruby only with lower-case alphabets](lower_rb/README.md)
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
@@ -74,6 +75,7 @@ Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScrip
 
 
 - [Polyglot Symbolic Quine](sym_poly_quine/README.md)
+- [Radiation-hardened Quine](rad_hard_quine/README.md)
 - [Keyword-only Perl](keyword_pl/README.md)
 - [Polyglot GIF](poly_gif/README.md)
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
@@ -88,6 +90,7 @@ Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScrip
 
 
 - [Polyglot Symbolic Quine](sym_poly_quine/README.md)
+- [Radiation-hardened Quine](rad_hard_quine/README.md)
 - [Polyglot GIF](poly_gif/README.md)
 - [Ruby only with lower-case alphabets](lower_rb/README.md)
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
