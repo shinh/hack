@@ -34,10 +34,18 @@ def h(c)
   end
 end
 
+def gen_set_mi
+  a = []
+  BF_CHARS.each_with_index do |c, i|
+    a << "(?<set_m#{i}>(?<m#{i}>#{ANY})){0}"
+  end
+  a * ''
+end
+
 def gen_set_m
   a = []
   BF_CHARS.each_with_index do |c, i|
-    a << "(?=.*(?=#{h(c)})\\k<p>)(?<m#{i}>#{ANY})"
+    a << "(?=.*(?=#{h(c)})\\k<p>)\\g<set_m#{i}>"
   end
   a * '|'
 end
@@ -46,6 +54,30 @@ def gen_get_m
   a = []
   BF_CHARS.each_with_index do |c, i|
     a << "(?=.*(?=#{h(c)})\\k<p>)\\k<m#{i}>"
+  end
+  a * '|'
+end
+
+def gen_inc_m
+  a = []
+  BF_CHARS.each_with_index do |c, i|
+    a << "(?=.*(?=#{h(c)})\\k<p>).*\\k<m#{i}>\\g<set_m#{i}>"
+  end
+  a * '|'
+end
+
+def gen_dec_m
+  a = []
+  BF_CHARS.each_with_index do |c, i|
+    a << "(?=.*(?=#{h(c)})\\k<p>).*(?=.\\k<m#{i}>)\\g<set_m#{i}>"
+  end
+  a * '|'
+end
+
+def gen_is0_m
+  a = []
+  BF_CHARS.each_with_index do |c, i|
+    a << "(?=.*(?=#{h(c)})\\k<p>).*(?=#{Z})\\k<m#{i}>"
   end
   a * '|'
 end
@@ -75,10 +107,12 @@ def init_m
 end
 
 def nest
-  "((?=.*;;.*?(?=\\g<get_m>)#{Z})\\g<skip_loop>|(?=\\g<loop>))" * BF_CHARS.size
+  "\\g<is0_m>\\g<skip_loop>|(?=\\g<loop>)(" * BF_CHARS.size + ")" * BF_CHARS.size
 end
 
 BF_REG = /^
+
+#{gen_set_mi}
 
 (?<set_p>(?<p>#{ANY})){0}
 
@@ -90,6 +124,9 @@ BF_REG = /^
 
 (?<set_m>#{gen_set_m}){0}
 (?<get_m>#{gen_get_m}){0}
+(?<inc_m>(?=.*;;#{gen_inc_m})){0}
+(?<dec_m>(?=.*;;#{gen_dec_m})){0}
+(?<is0_m>(?=.*;;#{gen_is0_m})){0}
 
 (?<output>#{output}){0}
 
@@ -101,11 +138,11 @@ BF_REG = /^
 (?<loop>
 (
  (
-   \+(?=.*;;.*?(\g<get_m>)\g<set_m>)
- | -(?=.*;;.*?(?=#{ANY}(\g<get_m>))\g<set_m>)
+   \+\g<inc_m>
+ | -\g<dec_m>
  | >(?=.*;;.*?\k<p>\g<set_p>)
  | <(?=.*;;.*?(?=#{ANY}\k<p>)\g<set_p>)
- | \[ #{nest} \]
+ | \[ ( #{nest} ) \]
  | \.(?=.*;;.*?(?=\g<get_m>)\g<output>)(?=.*;;.*?\k<op>\g<set_op>)
  | ,(?=.*?!(#{input}))(?=.*;;.*?\k<ip>\g<set_ip>)
  )
