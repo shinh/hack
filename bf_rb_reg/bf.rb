@@ -61,17 +61,17 @@ end
 def gen_inc_m
   a = []
   BF_CHARS.each_with_index do |c, i|
-    a << "(?=.*(?=#{h(c)})\\k<p>).*\\k<m#{i}>\\g<set_m#{i}>"
+    a << "(\\k<p>.*\\k<m#{i}>\\g<set_m#{i}>|#{h(c)}"
   end
-  a * '|'
+  a * '' + ')' * BF_CHARS.size
 end
 
 def gen_dec_m
   a = []
   BF_CHARS.each_with_index do |c, i|
-    a << "(?=.*(?=#{h(c)})\\k<p>).*(?=.\\k<m#{i}>)\\g<set_m#{i}>"
+    a << "(\\k<p>.*(?=#{ANY}\\k<m#{i}>)\\g<set_m#{i}>|#{h(c)}"
   end
-  a * '|'
+  a * '' + ')' * BF_CHARS.size
 end
 
 def gen_is0_m
