@@ -200,8 +200,6 @@ if ARGV.empty?
 
   puts "Running tests..."
 
-  check(',[-]!;;!',0, [0])
-
   check('+++', 0, [3])
 
   check('>>', 2, [])
@@ -233,6 +231,9 @@ if ARGV.empty?
   check('>' * (BF_CHARS.size + 1), 1, [])
   check('<<', BF_CHARS.size - 2, [])
   check('+' * (BF_CHARS.size + 2), 0, [2])
+
+  check(',[-]!;;!',0, [0])
+  check(',[-]!;;!' + BF_CHARS[1], 0, [0])
 
   check('+<<---------[>+++++>>+>++>+>++[+++<]>--]>.[->+>+>+<<<]>+.>..+++.>>>-.<----.<++.<.+++.------.<-.>>>+.', 3, [100, 108, 119, 33, 44], 'Hello, world!')
 else
