@@ -14,7 +14,7 @@ Z = BF_CHARS[0]
 
 ANY = '.' * BF_CHARS[0].size
 
-BF_SUFFIX = "#{BF_CHARS[-1]};;" + BF_CHARS * '' * 2
+BF_SUFFIX = "#{BF_CHARS[-1]};;" + BF_CHARS * '' * 4
 
 def h(c)
   if '()*+?[]\\#$.^|'.index(c)
@@ -42,44 +42,20 @@ def gen_set_mi
   a * ''
 end
 
-def gen_set_m
+def gen_inc_p
   a = []
   BF_CHARS.each_with_index do |c, i|
-    a << "(?=.*(?=#{h(c)})\\k<p>)\\g<set_m#{i}>"
-  end
-  a * '|'
-end
-
-def gen_get_m
-  a = []
-  BF_CHARS.each_with_index do |c, i|
-    a << "(?=.*(?=#{h(c)})\\k<p>)\\k<m#{i}>"
-  end
-  a * '|'
-end
-
-def gen_inc_m
-  a = []
-  BF_CHARS.each_with_index do |c, i|
-    a << "(\\k<p>.*\\k<m#{i}>\\g<set_m#{i}>|#{h(c)}"
+    a << "(\\k<p>\\g<set_p>.*?(?=\\k<x>)\\g<set_m#{i}>.*?(?=\\k<m#{(i+1)%BF_CHARS.size}>)\\g<set_x>|#{h(c)}"
   end
   a * '' + ')' * BF_CHARS.size
 end
 
-def gen_dec_m
+def gen_dec_p
   a = []
   BF_CHARS.each_with_index do |c, i|
-    a << "(\\k<p>.*(?=#{ANY}\\k<m#{i}>)\\g<set_m#{i}>|#{h(c)}"
+    a << "((?=#{ANY}\\k<p>)\\g<set_p>.*?(?=\\k<x>)\\g<set_m#{(i+1)%BF_CHARS.size}>.*?(?=\\k<m#{i}>)\\g<set_x>|#{h(c)}"
   end
   a * '' + ')' * BF_CHARS.size
-end
-
-def gen_is0_m
-  a = []
-  BF_CHARS.each_with_index do |c, i|
-    a << "(?=.*(?=#{h(c)})\\k<p>).*(?=#{Z})\\k<m#{i}>"
-  end
-  a * '|'
 end
 
 def output
@@ -93,7 +69,7 @@ end
 def input
   a = []
   BF_CHARS.each_with_index do |c, i|
-    a << "(?=.*(?=#{h(c)})\\k<ip>)(?=#{ANY*i}\\g<set_m>)"
+    a << "(?=.*(?=#{h(c)})\\k<ip>)(?=#{ANY*i}\\g<set_x>)"
   end
   a * '|'
 end
@@ -101,13 +77,13 @@ end
 def init_m
   a = []
   BF_CHARS.each_with_index do |c, i|
-    a << "(?=.*;;.*(?=#{h(c)})\\g<set_p>)(?=.*;;.*(?=#{Z})\\g<set_m>)"
+    a << "(?=.*;;.*(?=#{h(c)})\\g<set_p>)(?=.*;;.*(?=#{Z})\\g<set_m#{i}>)"
   end
   a.reverse * ''
 end
 
 def nest
-  "\\g<is0_m>\\g<skip_loop>|(?=\\g<loop>)(" * BF_CHARS.size + ")" * BF_CHARS.size
+  "(?=.*;;(?=#{Z})\\k<x>)\\g<skip_loop>|(?=\\g<loop>)(" * BF_CHARS.size + ")" * BF_CHARS.size
 end
 
 BF_REG = /^
@@ -122,11 +98,11 @@ BF_REG = /^
 (?<set_ip>(?<ip>#{ANY})){0}
 (?=.*;;.*?(?=#{Z})\g<set_ip>)
 
-(?<set_m>#{gen_set_m}){0}
-(?<get_m>#{gen_get_m}){0}
-(?<inc_m>(?=.*;;#{gen_inc_m})){0}
-(?<dec_m>(?=.*;;#{gen_dec_m})){0}
-(?<is0_m>(?=.*;;#{gen_is0_m})){0}
+(?<set_x>(?<x>#{ANY})){0}
+(?=.*;;.*?(?=#{Z})\g<set_x>)
+
+(?<inc_p>(?=.*;;#{gen_inc_p})){0}
+(?<dec_p>(?=.*;;#{gen_dec_p})){0}
 
 (?<output>#{output}){0}
 
@@ -136,14 +112,15 @@ BF_REG = /^
 (?<skip_loop>[^\[\]]*(\[\g<skip_loop>\][^\[\]]*)*){0}
 
 (?<loop>
+
 (
  (
-   \+\g<inc_m>
- | -\g<dec_m>
- | >(?=.*;;.*?\k<p>\g<set_p>)
- | <(?=.*;;.*?(?=#{ANY}\k<p>)\g<set_p>)
+  \+(?=.*;;.*?\k<x>\g<set_x>)
+ | -(?=.*;;.*?(?=#{ANY}\k<x>)\g<set_x>)
+ | >\g<inc_p>
+ | <\g<dec_p>
  | \[ ( #{nest} ) \]
- | \.(?=.*;;.*?(?=\g<get_m>)\g<output>)(?=.*;;.*?\k<op>\g<set_op>)
+ | \.(?=.*;;.*?(?=\k<x>)\g<output>)(?=.*;;.*?\k<op>\g<set_op>)
  | ,(?=.*?!(#{input}))(?=.*;;.*?\k<ip>\g<set_ip>)
  )
 )+
@@ -176,6 +153,7 @@ end
 
 def check(bf, ep, em, eo='')
   start = Time.now
+  ex = em[ep]
 
   m = run_bf(bf)
   if !m
@@ -189,9 +167,19 @@ def check(bf, ep, em, eo='')
     return
   end
 
+  ax = BF_CHARS.index(m['x'])
+  if ex && ax != ex
+    puts "FAIL(x): #{bf} expected=#{ex} actual=#{ax}"
+    return
+  end
+
   am = []
   em.size.times do |i|
-    am << BF_CHARS.index(m["m#{i}"])
+    if i == ep
+      am << ax
+    else
+      am << BF_CHARS.index(m["m#{i}"])
+    end
   end
   if am != em
     puts "FAIL(mem): #{bf} expected=#{em} actual=#{am}"
@@ -212,7 +200,10 @@ if ARGV.empty?
 
   puts "Running tests..."
 
+  check(',[-]!;;!',0, [0])
+
   check('+++', 0, [3])
+
   check('>>', 2, [])
 
   check('+++++--+>+++<+>>', 2, [5, 3])
