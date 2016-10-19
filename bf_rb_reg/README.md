@@ -45,8 +45,8 @@ Here's the list of specifications of the implementation:
   halts may fail)
 
 Acknowledgement: The original code was 2400x slower for cal.bf, but
-[https://twitter.com/saito_ta](@saito_ta) and
-[https://twitter.com/yvl_](@yvl_) made significant performance
+[@saito_ta](https://twitter.com/saito_ta) and
+[@yvl_](https://twitter.com/yvl_) made significant performance
 improvements.
 
 

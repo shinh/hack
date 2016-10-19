@@ -59,6 +59,7 @@ Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScrip
 
 
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [Brainfuck in Ruby's Regexp](bf_rb_reg/README.md)
 - [cal(1) in Brainfuck](cal_bf/README.md)
 
 ### C
@@ -90,6 +91,7 @@ Code written with some restrictions. For example, Ruby (>= 1.9), Perl, JavaScrip
 
 
 - [5 Languages Polyglot Quine](poly5_quine/README.md)
+- [Brainfuck in Ruby's Regexp](bf_rb_reg/README.md)
 - [Polyglot GIF](poly_gif/README.md)
 - [Polyglot Symbolic Quine](sym_poly_quine/README.md)
 - [Radiation-hardened Quine](rad_hard_quine/README.md)
