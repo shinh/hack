@@ -1,0 +1,100 @@
+<html>
+<head>
+
+<title>Very symmetric JavaScript code</title>
+
+<link href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" rel="stylesheet">
+<style>
+textarea {
+  font-family: 'Droid Sans Mono', monospace;
+  font-size: 13px;
+  line-height: 1.2;
+}
+table {
+  border-collapse: collapse;
+  border: 1px solid #333;
+}
+
+</style>
+
+<script type="text/javascript">
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+function run() {
+  eval($('code').value);
+}
+
+function init() {
+  var code = $('code').value;
+  $('hflip').value = code;
+  $('vflip').value = code;
+  $('rot180').value = code;
+  var ctx = $('canvas').getContext('2d');
+  ctx.translate(450, 450);
+  draw(ctx);
+}
+
+function startRot() {
+  var ctx = $('canvas').getContext('2d');
+  setInterval("rotate()", 100);
+}
+
+function draw(ctx) {
+  ctx.font = "13px 'Droid Sans Mono', monospace";
+  var lines = $('code').value.split("\n");
+  for (var i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i], -450, (i+1)*16-450);
+  }
+}
+
+var step = 0;
+function rotate() {
+  step++;
+  var ctx = $('canvas').getContext('2d');
+  ctx.clearRect(-450,-450,900,900);
+  ctx.rotate(0.02);
+  draw(ctx);
+}
+
+</script>
+</head>
+
+<body onload="init()">
+
+<h1>Very symmetric JavaScript code</h1>
+
+<p>
+This is a JavaScript code which has three symmetries - reflections by both horizontal and vertical axes and a rotation by 180 degrees. Here's the list of allowed characters and how they are transformed.
+
+<p>
+TBL
+
+<p>
+<input type="button" onclick="run()" value="Run JS">
+You can also run this code by SpiderMonkey or Node.js.
+
+<p>
+Original code:<br>
+<textarea id="code" rows="57" cols="113">TMPL</textarea>
+
+<p>
+Flipped horizontally (by CSS):<br>
+<textarea id="hflip" rows="57" cols="113" style="transform: scale(-1,1);"></textarea>
+
+<p>
+Flipped vertically (by CSS):<br>
+<textarea id="vflip" rows="57" cols="113" style="transform: scale(1,-1);"></textarea>
+
+<p>
+Rotated 180 degrees (by CSS):<br>
+<textarea id="rot180" rows="57" cols="113" style="transform: rotate(180deg);"></textarea>
+
+<p>
+<div><input type="button" onclick="startRot()" value="Rotate by canvas"></div>
+<div><canvas id="canvas" width="900" height="900"></canvas></div>
+
+</body>
+</html>
