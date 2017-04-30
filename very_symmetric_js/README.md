@@ -2,4 +2,4 @@
 
 Keywords: Restricted JavaScript
 
-See [very_symmetryc_js.html](very_symmetryc_js.html)
+See [very_symmetric_js.html](http://shinh.skr.jp/obf/very_symmetric_js.html)
